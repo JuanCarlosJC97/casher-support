@@ -1,0 +1,10 @@
+.modal-content {
+    font-family: AdobeCaslonPro;
+    height: 90%;
+    border-radius: 30px !important;
+    border: solid 1px #000;
+  }
+  .title{
+      display: flex !important;
+      justify-content: center !important;
+  }
