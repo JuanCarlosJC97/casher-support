@@ -6,13 +6,14 @@ import { FormControl } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table'
 import Logo from '../images/logo.png'
-import Casher from '../images/casher.jpg'
 import './SupportCasher.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
+
+const requestDomain = document.getElementById("requestPath").getAttribute("data-server");
 const MySwal = withReactContent(Swal);
 
 
@@ -29,8 +30,8 @@ export default function SupportCasher(props) {
     const [showLastName, setLastName] = useState('');
     const [showDateOfBirth, setDateOfBirth] = useState('');
     const [showEmailAddress, setEmailAddress] = useState('');
-    const [showRol, setRol] = useState();
-    const [showStatus, setStatus] = useState();
+    const [showRol, setRol] = useState('');
+    const [showStatus, setStatus] = useState('');
     const [showGender, setGender] = useState('');
 
     //GET cashers
@@ -40,8 +41,11 @@ export default function SupportCasher(props) {
     }, []);
 
     var getEventCashier = async function () {
-        let resp = await fetch("http://localhost:3001/api/cashiers/",
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        let resp = await fetch(requestDomain +"/admin/getCashiers/",
             {
+                headers: myHeaders,
                 method: "GET"
             }
         );
@@ -53,25 +57,37 @@ export default function SupportCasher(props) {
     };
 
     //DELETE cashier
-    var deleteEventCashier = async function (id) {
-        let resp = await fetch("http://localhost:3001/api/cashiers/" + id,
-            {
-                method: "DELETE"
+    var deleteEventCashier = async function (id, name) {
+        MySwal.fire({
+            title: '¿Estas seguro?',
+            html: "Si elimina este cajero <strong class='text-danger'>"+name+"</strong> sera definitivo!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let resp = await fetch(requestDomain + "/admin/getCashiers/" + id,
+                    {
+                        method: "DELETE"
+                    }
+                );
+                let auxResp = await resp.json();
+                getEventCashier();
+                Swal.fire(
+                    auxResp.mssg,
+                    (auxResp.status === 1) ? "<i>Cajero eliminado</i>" : "<i>ERROR</i>",
+                    (auxResp.status === 1) ? 'success' : 'error'
+                )
             }
-        );
-        let auxResp = await resp.json();
-        getEventCashier();
-        await MySwal.fire({
-            tittle: "<strong>" + auxResp.mssg + "</strong>",
-            html: (auxResp.status === 1) ? <i>Cajero eliminado</i> : <i>ERROR</i>,
-            icon: (auxResp.status === 1) ? 'success' : 'error'
         })
         return;
     };
 
     //Get ONE cashier
     var getEventOneCashier = async function (id) {
-        let resp = await fetch("http://localhost:3001/api/cashiers/" + id,
+        let resp = await fetch(requestDomain +"/admin/getCashiers/" + id,
             {
                 method: "GET"
             }
@@ -105,7 +121,7 @@ export default function SupportCasher(props) {
     var updateEventCashier = async function (id) {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch("http://localhost:3001/api/cashiers/" + id,
+        let resp = await fetch(requestDomain +"/admin/getCashiers/" + id,
             {
                 method: "PUT",
                 headers: myHeaders,
@@ -137,7 +153,7 @@ export default function SupportCasher(props) {
     var addEventCashier = async function () {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch("http://localhost:3001/api/cashiers",
+        let resp = await fetch(requestDomain + "/aadmin/getCashiers",
             {
                 method: "POST",
                 headers: myHeaders,
@@ -169,7 +185,7 @@ export default function SupportCasher(props) {
         return (
             <Modal {...props} className="modal" aria-labelledby="contained-modal-title-center">
                 <Modal.Header closeButton>
-                    <h1>Nuevo Cajero</h1>
+                    <h3>Nuevo Cajero</h3>
                 </Modal.Header>
                 <Modal.Body className="modalBody">
                     <>
@@ -198,7 +214,7 @@ export default function SupportCasher(props) {
                 </Modal.Body>
                 <Modal.Footer>
                     <>
-                        <Button variant="secondary">Cancelar</Button>
+                        <Button variant="secondary" onClick={() => { setShowAdd(false) }}>Cancelar</Button>
                         <Button variant="primary" onClick={addEventCashier}>Guardar</Button>
                     </>
                 </Modal.Footer>
@@ -238,7 +254,7 @@ export default function SupportCasher(props) {
                 </Modal.Body>
                 <Modal.Footer>
                     <>
-                        <Button variant="secondary">Cancelar</Button>
+                        <Button variant="secondary" onClick={() => { setShowAdd(false) }}>Cancelar</Button>
                         <Button variant="primary" onClick={() => updateEventCashier(showId)}>Guardar</Button>
                     </>
                 </Modal.Footer>
@@ -249,15 +265,15 @@ export default function SupportCasher(props) {
 
     return (
         <Container className="supportCasher" fluid>
-            <Row>
+            <Row className="row-header">
                 <Col sm={3} md={4} lg={4}>
-                    <Image className="logo" src={Logo}></Image>
+                    <Image className="logo mt-4" src={Logo}></Image>
                 </Col >
-                <Col className="title" sm={7} md={4} lg={4}>
-                    <h2>Catálogo de Cajeros</h2>
+                <Col className="text-center" sm={7} md={4} lg={4}>
+                    <h2 lassName="mt-4">Catálogo de Cajeros</h2>
                 </Col>
-                <Col className="col-button-close" sm={2} md={4} lg={4}>
-                    <Button className="mb-3 button-close" variant="primary">Cerrar sesión</Button>
+                <Col sm={2} md={4} lg={4}>
+                    <Button style={{ float: "right" }} className="button-close mt-4" variant="primary" href="/logout">Cerrar sesión</Button>
                 </Col>
             </Row>
             <Row className="justify-content-md-end">
@@ -276,7 +292,7 @@ export default function SupportCasher(props) {
                                 <th>Correo electrónico</th>
                                 <th>Rol</th>
                                 <th>Estatus</th>
-                                <th>Editar</th>
+                                {/* <th>Editar</th> */}
                                 <th>Eliminar</th>
                             </tr>
                         </thead>
@@ -289,16 +305,16 @@ export default function SupportCasher(props) {
                                     <td>{product.emailAddress}</td>
                                     <td>{product.rol}</td>
                                     <td>{product.status}</td>
-                                    <td>
+                                    {/* <td>
                                         <Button className="mb-3 add-product" variant="light" onClick={() => {
                                             getEventOneCashier(product._id);
                                             setShowUpdate(true);
                                         }}>
                                             ✏️
                                         </Button>
-                                    </td>
+                                    </td> */}
                                     <td>
-                                        <Button className="mb-3 add-product" variant="light" onClick={() => deleteEventCashier(product._id)}>
+                                        <Button className="mb-3 add-product" variant="light" onClick={() => deleteEventCashier(product._id, product.name)}>
                                             <FontAwesomeIcon className="icon-trash" icon={faTrashAlt} />
                                         </Button>
                                     </td>
