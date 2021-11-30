@@ -43,7 +43,7 @@ export default function SupportCasher(props) {
     var getEventCashier = async function () {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch(requestDomain +"/admin/getCashiers/",
+        let resp = await fetch(requestDomain + "/admin/getCashiers/",
             {
                 headers: myHeaders,
                 method: "GET"
@@ -60,7 +60,7 @@ export default function SupportCasher(props) {
     var deleteEventCashier = async function (id, name) {
         MySwal.fire({
             title: '¿Estas seguro?',
-            html: "Si elimina este cajero <strong class='text-danger'>"+name+"</strong> sera definitivo!",
+            html: "Si elimina este cajero <strong class='text-danger'>" + name + "</strong> sera definitivo!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -87,7 +87,7 @@ export default function SupportCasher(props) {
 
     //Get ONE cashier
     var getEventOneCashier = async function (id) {
-        let resp = await fetch(requestDomain +"/admin/getCashier/" + id,
+        let resp = await fetch(requestDomain + "/admin/getCashier/" + id,
             {
                 method: "GET"
             }
@@ -114,6 +114,7 @@ export default function SupportCasher(props) {
         setStatus(status);
         setGender(gender);
 
+        setShowUpdate(true);
         return;
     };
 
@@ -121,7 +122,7 @@ export default function SupportCasher(props) {
     var updateEventCashier = async function (id) {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch(requestDomain +"/admin/cashiers/" + id,
+        let resp = await fetch(requestDomain + "/admin/cashiers/" + id,
             {
                 method: "PUT",
                 headers: myHeaders,
@@ -222,46 +223,39 @@ export default function SupportCasher(props) {
         )
     }
 
-    function FormModalCashierUpdate(props) {
-        return (
-            <Modal {...props} className="modal" aria-labelledby="contained-modal-title-center">
-                <Modal.Header closeButton>
-                    <h1>Modificar Cajero</h1>
-                </Modal.Header>
-                <Modal.Body className="modalBody">
-                    <>
-                        <FormLabel> Nombre *</FormLabel>
-                        <FormControl id="nameUpdate" value={showName} onChange={(e) => setName(e.target.value)} />
+    const [datosSel, setDatosSel] = useState({
+        _id: '',
+        name: '',
+        lastName: '',
+        dateOfBirth: '',
+        emailAddress: '',
+        rol: '',
+        status: '',
+        gender: ''
+    })
 
-                        <FormLabel> Apellidos *</FormLabel>
-                        <FormControl id="lastNameUpdate" type="text" value={showLastName} onChange={(e) => setLastName(e.target.value)} />
-
-                        <FormLabel> Fecha de nacimiento *</FormLabel>
-                        <FormControl id="dateOfBirthUpdate" type="text" value={showDateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
-
-                        <FormLabel> Correo electrónico *</FormLabel>
-                        <FormControl id="emailAddressUpdate" type="email" value={showEmailAddress} onChange={(e) => setEmailAddress(e.target.value)} />
-
-                        <FormLabel> Rol *</FormLabel>
-                        <FormControl id="rolUpdate" value={showRol} onChange={(e) => setRol(e.target.value)} />
-
-                        <FormLabel> Estatus *</FormLabel>
-                        <FormControl id="statusUpdate" value={showStatus} onChange={(e) => setStatus(e.target.value)} />
-
-                        <FormLabel> Genero *</FormLabel>
-                        <FormControl id="genderUpdate" value={showGender} onChange={(e) => setGender(e.target.value)} />
-                    </>
-                </Modal.Body>
-                <Modal.Footer>
-                    <>
-                        <Button variant="secondary" onClick={() => { setShowAdd(false) }}>Cancelar</Button>
-                        <Button variant="primary" onClick={() => updateEventCashier(showId)}>Guardar</Button>
-                    </>
-                </Modal.Footer>
-            </Modal >
-        );
+    const selcc = (e, c) => {
+        setDatosSel(e);
+        (c === 'edit') && setShowUpdate(true)
     }
 
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setDatosSel((prevState) => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
+
+
+    /* 
+        function FormModalCashierUpdate(props) {
+            return (
+                
+            );
+        } 
+     */
 
     return (
         <Container className="supportCasher" fluid>
@@ -292,7 +286,7 @@ export default function SupportCasher(props) {
                                 <th>Correo electrónico</th>
                                 <th>Rol</th>
                                 <th>Estatus</th>
-                                {/* <th>Editar</th> */}
+                                <th>Editar</th>
                                 <th>Eliminar</th>
                             </tr>
                         </thead>
@@ -305,14 +299,11 @@ export default function SupportCasher(props) {
                                     <td>{product.emailAddress}</td>
                                     <td>{product.rol}</td>
                                     <td>{product.status}</td>
-                                    {/* <td>
-                                        <Button className="mb-3 add-product" variant="light" onClick={() => {
-                                            getEventOneCashier(product._id);
-                                            setShowUpdate(true);
-                                        }}>
+                                    <td>
+                                        <Button className="mb-3 add-product" variant="light" onClick={() => selcc(product, 'edit')}>
                                             ✏️
                                         </Button>
-                                    </td> */}
+                                    </td>
                                     <td>
                                         <Button className="mb-3 add-product" variant="light" onClick={() => deleteEventCashier(product._id, product.name)}>
                                             <FontAwesomeIcon className="icon-trash" icon={faTrashAlt} />
@@ -333,10 +324,41 @@ export default function SupportCasher(props) {
                 show={showAdd}
                 onHide={() => setShowAdd(false)}
             />
-            <FormModalCashierUpdate
-                show={showUpdate}
-                onHide={() => setShowUpdate(false)}
-            />
+            <Modal show={showUpdate} onHide={() => setShowUpdate(false)} className="modal" aria-labelledby="contained-modal-title-center">
+                <Modal.Header closeButton>
+                    <h1>Modificar Cajero</h1>
+                </Modal.Header>
+                <Modal.Body className="modalBody">
+                    <>
+                        <FormLabel> Nombre *</FormLabel>
+                        <FormControl id="nameUpdate" value={showName} onChange={(e) => setName(e.target.value)} />
+
+                        <FormLabel> Apellidos *</FormLabel>
+                        <FormControl id="lastNameUpdate" type="text" value={showLastName} onChange={(e) => setLastName(e.target.value)} />
+
+                        <FormLabel> Fecha de nacimiento *</FormLabel>
+                        <FormControl id="dateOfBirthUpdate" type="text" value={showDateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+
+                        <FormLabel> Correo electrónico *</FormLabel>
+                        <FormControl id="emailAddressUpdate" type="email" value={showEmailAddress} onChange={(e) => setEmailAddress(e.target.value)} />
+
+                        <FormLabel> Rol *</FormLabel>
+                        <FormControl id="rolUpdate" value={showRol} onChange={(e) => setRol(e.target.value)} />
+
+                        <FormLabel> Estatus *</FormLabel>
+                        <FormControl id="statusUpdate" value={showStatus} onChange={(e) => setStatus(e.target.value)} />
+
+                        <FormLabel> Genero *</FormLabel>
+                        <FormControl id="genderUpdate" value={showGender} onChange={(e) => setGender(e.target.value)} />
+                    </>
+                </Modal.Body>
+                <Modal.Footer>
+                    <>
+                        <Button variant="secondary" onClick={() => { setShowAdd(false) }}>Cancelar</Button>
+                        <Button variant="primary" onClick={() => updateEventCashier(datosSel._id)}>Guardar</Button>
+                    </>
+                </Modal.Footer>
+            </Modal >
         </Container >
     )
 }
