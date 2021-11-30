@@ -185,7 +185,7 @@ export default function SupportCasher(props) {
         return (
             <Modal {...props} className="modal" aria-labelledby="contained-modal-title-center">
                 <Modal.Header closeButton>
-                    <h3>Nuevo Cajero</h3>
+                    <h1>Nuevo Cajero</h1>
                 </Modal.Header>
                 <Modal.Body className="modalBody">
                     <>
