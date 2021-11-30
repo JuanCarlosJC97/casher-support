@@ -68,7 +68,7 @@ export default function SupportCasher(props) {
             confirmButtonText: 'Si, eliminar!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                let resp = await fetch(requestDomain + "/admin/getCashiers/" + id,
+                let resp = await fetch(requestDomain + "/admin/deleteCashiers/" + id,
                     {
                         method: "DELETE"
                     }
@@ -87,7 +87,7 @@ export default function SupportCasher(props) {
 
     //Get ONE cashier
     var getEventOneCashier = async function (id) {
-        let resp = await fetch(requestDomain +"/admin/getCashiers/" + id,
+        let resp = await fetch(requestDomain +"/admin/getCashier/" + id,
             {
                 method: "GET"
             }
@@ -121,7 +121,7 @@ export default function SupportCasher(props) {
     var updateEventCashier = async function (id) {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch(requestDomain +"/admin/getCashiers/" + id,
+        let resp = await fetch(requestDomain +"/admin/cashiers/" + id,
             {
                 method: "PUT",
                 headers: myHeaders,
@@ -153,7 +153,7 @@ export default function SupportCasher(props) {
     var addEventCashier = async function () {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        let resp = await fetch(requestDomain + "/aadmin/getCashiers",
+        let resp = await fetch(requestDomain + "/aadmin/addCashier",
             {
                 method: "POST",
                 headers: myHeaders,
