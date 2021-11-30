@@ -5,7 +5,7 @@ import { Image } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table'
-import Logo from '../images/logo2.svg'
+import Logo from '../images/logo.png'
 import Casher from '../images/casher.jpg'
 import './SupportCasher.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -248,26 +248,25 @@ export default function SupportCasher(props) {
 
 
     return (
-        <Container className="supportCasher">
+        <Container className="supportCasher" fluid>
             <Row>
-                <Col md={4} lg={4}>
+                <Col sm={3} md={4} lg={4}>
                     <Image className="logo" src={Logo}></Image>
                 </Col >
-                <Col className="title" sm={6} md={4} lg={4}>
-                    <h1>Catálogo de Cajeros</h1>
+                <Col className="title" sm={7} md={4} lg={4}>
+                    <h2>Catálogo de Cajeros</h2>
                 </Col>
-                <Col className="col-button-close" sm={4} md={4} lg={4}>
-                    <Button className="mb-3 button-inicio" variant="link">Inicio</Button>
+                <Col className="col-button-close" sm={2} md={4} lg={4}>
                     <Button className="mb-3 button-close" variant="primary">Cerrar sesión</Button>
                 </Col>
             </Row>
             <Row className="justify-content-md-end">
-                <Col lg={11}>
+                <Col lg={12}>
                     <Button className="mb-3 add-casher" variant="light" onClick={() => { setShow(true) }}>Nuevo Cajero <FontAwesomeIcon className="icon-plus" icon={faPlus} /></Button>
                 </Col>
             </Row>
             <Row>
-                <Col xs={9} sm={12} md={12} lg={12}>
+                <Col>
                     <Table className="table-cashers" bordered size="sm" responsive>
                         <thead>
                             <tr>
@@ -309,11 +308,7 @@ export default function SupportCasher(props) {
                     </Table>
                 </Col>
             </Row>
-            <Row className="justify-content-md">
-                <Col lg={12}>
-                    <Image className="img-casher" src={Casher} roundedCircle></Image>
-                </Col>
-            </Row>
+
             <FormModalCashier
                 show={show}
                 onHide={() => setShow(false)}
