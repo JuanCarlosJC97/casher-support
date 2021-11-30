@@ -331,25 +331,25 @@ export default function SupportCasher(props) {
                 <Modal.Body className="modalBody">
                     <>
                         <FormLabel> Nombre *</FormLabel>
-                        <FormControl id="nameUpdate" value={showName} onChange={(e) => setName(e.target.value)} />
+                        <FormControl id="nameUpdate" value={showName} onChange={(e) => setName(handleChange)} />
 
                         <FormLabel> Apellidos *</FormLabel>
-                        <FormControl id="lastNameUpdate" type="text" value={showLastName} onChange={(e) => setLastName(e.target.value)} />
+                        <FormControl id="lastNameUpdate" type="text" value={showLastName} onChange={(e) => setLastName(handleChange)} />
 
                         <FormLabel> Fecha de nacimiento *</FormLabel>
-                        <FormControl id="dateOfBirthUpdate" type="text" value={showDateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                        <FormControl id="dateOfBirthUpdate" type="text" value={showDateOfBirth} onChange={(e) => setDateOfBirth(handleChange)} />
 
                         <FormLabel> Correo electrónico *</FormLabel>
-                        <FormControl id="emailAddressUpdate" type="email" value={showEmailAddress} onChange={(e) => setEmailAddress(e.target.value)} />
+                        <FormControl id="emailAddressUpdate" type="email" value={showEmailAddress} onChange={(e) => setEmailAddress(handleChange)} />
 
                         <FormLabel> Rol *</FormLabel>
-                        <FormControl id="rolUpdate" value={showRol} onChange={(e) => setRol(e.target.value)} />
+                        <FormControl id="rolUpdate" value={showRol} onChange={(e) => setRol(handleChange)} />
 
                         <FormLabel> Estatus *</FormLabel>
-                        <FormControl id="statusUpdate" value={showStatus} onChange={(e) => setStatus(e.target.value)} />
+                        <FormControl id="statusUpdate" value={showStatus} onChange={(e) => setStatus(handleChange)} />
 
                         <FormLabel> Genero *</FormLabel>
-                        <FormControl id="genderUpdate" value={showGender} onChange={(e) => setGender(e.target.value)} />
+                        <FormControl id="genderUpdate" value={showGender} onChange={(e) => setGender(handleChange)} />
                     </>
                 </Modal.Body>
                 <Modal.Footer>
